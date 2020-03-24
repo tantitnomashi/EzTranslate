@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Tan Tran M. </title>
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
+    <link rel="stylesheet" href="/src/css/bootstrap.min.css">
+
+    <script src="/src/jquery-3.4.1.js"></script>
+    <script src="/utils.js"></script>
+    <script src="vocab.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <style>
+        #main-board {
+            height: auto;
+            width: 100%;
+           margin: 10px 0;
+            
+        }
+
+        #source,
+        #result {
+            font-size: 35px;
+            width: 100% !important;
+        }
+    </style>
+</head>
+    <body>
+        <div class="">
+            <div id="main-board" class="row text-center">
+                <div class="row w-100">
+                    <div class="col-9">
+                        <div class="col-11 my-1 mx-auto">
+                            <div id="source" class="btn btn-primary px-2"></div>
+                        </div>
+                        <div class="col-11 my-1 mx-auto">
+                            <div id="result" class="btn btn-warning px-2"></div>
+                        </div>
+                    </div>
+                    <div class="h-100 col-3">
+                        <div class="h-100 mx-auto ">
+                            <button id="remove-word" class="btn btn-danger mt-5">Remove</button>
+                        </div>
+                    </div>
+                </div>          
+            </div>
+        </div>
+    </body>
+</html>

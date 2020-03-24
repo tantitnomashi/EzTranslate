@@ -1,0 +1,27 @@
+{
+    "manifest_version":2,
+    "name": "Ez Trans",
+    "version": "1.0.2",
+    "description": "A translate extension using Google Cloud API by Tan M. Tran",
+    "icons":{
+        "128":"src/img/icon16.png",
+        "48":"src/img/icon16.png",
+        "16":"src/img/icon16.png"
+    },
+    "browser_action":{
+        "default_icon":"src/img/icon16.png",
+        "default_popup":"popup.html"
+    },
+    "background": {
+        "scripts": ["src/jquery-3.4.1.js","eventPage.js"],
+        "persistent": false
+    },
+    "content_scripts": [
+        {
+            "matches" : ["https://developer.chrome.com/*","https://www.facebook.com/*"],
+            "js": ["content.js","src/jquery-3.4.1.js"]
+        }
+    ],
+    "permissions": ["tabs","contextMenus","storage"],
+    "content_security_policy": "script-src 'self' ; object-src 'self'; style-src 'self' 'unsafe-inline';"
+}

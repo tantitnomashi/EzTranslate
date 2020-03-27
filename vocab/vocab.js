@@ -47,7 +47,7 @@ function drawPopup(element) {
 
 var removeAWord = (key) => {
     chrome.storage.sync.remove(key, () => {
-        console.log("removed : " + key);
+        console.log("removed this word : " + key);
     });
 }
 

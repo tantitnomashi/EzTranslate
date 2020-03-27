@@ -4,7 +4,10 @@ var googleTrans = {
     "title": "Translate by Tan M. Tran ",
     "contexts": ["selection"]
 };
-chrome.contextMenus.create(googleTrans);
+chrome.contextMenus.removeAll(()=>{
+    chrome.contextMenus.create(googleTrans);
+})
+
 
 const apiKey = "AIzaSyBx-VEE7kYo3G6DbbudA-X7AHRQHO96DnM";
 
@@ -33,7 +36,8 @@ function makeApiRequest(endpoint, type, authNeeded) {
             saveVocabToLocalStorage(endpoint.q, result);
         },
         error: (xhr, status, error) => {
-            alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+            alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
+            // cannot get data send from Google Cloud. 
 
         }
     });
@@ -67,12 +71,19 @@ function fixedEncodeURI(str) {
 }
 
 chrome.contextMenus.onClicked.addListener(function (clickData) {
-    endpoints.q = clickData.selectionText;
+   addNewWord(clickData.selectionText);
+});
+
+
+var flag = false;
+
+var addNewWord = (word)=>{
+    endpoints.q = word;
     makeApiRequest(endpoints, "POST", false);
-    if (clickData.menuItemId == "gg" && clickData.selectionText) {
+    if (word) {
         var height = parseInt("100");
         var width = parseInt("300");
-        var wikiUrl = "https://translate.google.com/?hl=la&ie=UTF8&sl=auto&tl=la#view=home&op=translate&sl=en&tl=vi&text=" + fixedEncodeURI(clickData.selectionText);
+        var wikiUrl = "https://translate.google.com/?hl=la&ie=UTF8&sl=auto&tl=la#view=home&op=translate&sl=en&tl=vi&text=" + fixedEncodeURI(word);
         var createData = {
             "url": wikiUrl,
             "type": "popup",
@@ -83,8 +94,7 @@ chrome.contextMenus.onClicked.addListener(function (clickData) {
         };
         chrome.windows.create(createData, function () {});
     }
-});
-var flag = false;
+}
 // listen message has send from content.js 
 chrome.runtime.onMessage.addListener((request,sender,sendResponse)=>{
     if(request.todo == "openNewTabs" && flag == false){
@@ -92,11 +102,12 @@ chrome.runtime.onMessage.addListener((request,sender,sendResponse)=>{
        displayAVocabulary();
         setInterval(()=>{
             displayAVocabulary();
-        }, 60000);
+        }, 300000);
     }
 });
 
 var displayDictionary = () =>{
+    // display dictionary 
     var height = parseInt("100");
     var width = parseInt("300");
     var createData = {
@@ -111,20 +122,25 @@ var displayDictionary = () =>{
 }
 var displayAVocabulary = () =>{
     var createData = {
-        "url": "vocab/vocab.html",
+        "url": (Math.floor(Math.random() * 10000) % 2) == 1 ? "flashcard/card.html" : "vocab/vocab.html",
         "type": "popup",
         "top": screen.availHeight - 200,
         "left": 0,
         "width": 450,
-        "height": 220
+        "height": 220,
+        "focused" : false
     };
     chrome.windows.create(createData, function () {});
+    // create a small window display vocabulary 
 }
-var openNewTabWithUrl = () => {
+var openNewTabWithUrl = (url) => {
     var createProperties = {
             "url" : url,
             "active" :false,
             "selected" :false,
         }
     chrome.tabs.create(createProperties, function () {});
+    // open new tabs, not active tabs
 }
+
+

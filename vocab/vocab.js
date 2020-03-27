@@ -1,17 +1,27 @@
 var currentWord = "";
 $(document).ready(function () {
-    getData();
-    $("#remove-word").click(()=>{
+
+    myFirstPromise.then(function (element) {
+        drawPopup(element);
+    }).catch((err) => {
+        console.log(err);
+    });
+     
+    // remove the word ín 
+    $("#remove-word").click(() => {
         removeAWord(currentWord);
         $("#remove-word").html("Removed !");
         $("#remove-word").removeClass("btn-danger");
         $("#remove-word").addClass("btn-outline-success");
     })
-    $("#source").click(()=>{
+    $("#source").click(() => {
         var word = $("#source").text();
         openWithCambridgeDic(word);
     });
+
 });
+
+
 
 function drawPopup(element) {
     currentWord = element;
@@ -23,29 +33,20 @@ function drawPopup(element) {
         $("#result").html(obj.result);
     });
 
-    var tabId; 
-    chrome.tabs.getCurrent((tab)=>{
+
+    var tabId;
+    chrome.tabs.getCurrent((tab) => {
         tabId = tab.id;
     });
-   setTimeout(()=>{
-    chrome.tabs.remove(tabId, ()=>{
-        console.log("close");
-    });
-   },5000);
-}
-function getData() {
-    var keys = [];
-    var item
-    chrome.storage.sync.get(null, function (items) {
-        keys = Object.keys(items);
-        item = keys[Math.floor(Math.random() * keys.length)];
-    });
     setTimeout(() => {
-        drawPopup(item);
-    }, 100);
+        chrome.tabs.remove(tabId, () => {
+            console.log("close");
+        });
+    }, 15000);
 }
+
 var removeAWord = (key) => {
-    chrome.storage.sync.remove(key, ()=>{
+    chrome.storage.sync.remove(key, () => {
         console.log("removed : " + key);
     });
 }
@@ -55,15 +56,17 @@ function fixedEncodeURI(str) {
 }
 var openWithCambridgeDic = (word) => {
     var height = parseInt("100");
-        var width = parseInt("300");
-        var camUrl = "https://dictionary.cambridge.org/vi/dictionary/english/" + fixedEncodeURI(word);
-        var createData = {
-            "url": camUrl,
-            "type": "popup",
-            "top": height,
-            "left": width,
-            "width": parseInt(screen.availWidth / 2),
-            "height": parseInt(screen.availHeight / 1.5)
-        };
-        chrome.windows.create(createData, function () {});
+    var width = parseInt("300");
+    var camUrl = "https://dictionary.cambridge.org/vi/dictionary/english/" + fixedEncodeURI(word);
+    var createData = {
+        "url": camUrl,
+        "type": "popup",
+        "top": height,
+        "left": width,
+        "width": parseInt(screen.availWidth / 2),
+        "height": parseInt(screen.availHeight / 1.5)
+    };
+    chrome.windows.create(createData, function () {});
+    // For deep search with Cambridge Dictionary 
+    
 }
